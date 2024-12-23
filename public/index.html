@@ -1,0 +1,104 @@
+<!-- public/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .payment-container {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            text-align: center;
+        }
+
+        .payment-container h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .payment-container label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            text-align: left;
+        }
+
+        .payment-container input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .payment-container button {
+            width: 100%;
+            padding: 10px;
+            background-color: #f47c20;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .payment-container button:hover {
+            background-color: #d96c1a;
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-container">
+        <h2>Payment Form</h2>
+        <form id="payment-form">
+            <label for="customer-id">Customer ID:</label>
+            <input type="number" id="customer-id" name="customer_id" placeholder="Enter Customer ID" required>
+
+            <label for="payment-amount">Payment Amount:</label>
+            <input type="number" id="payment-amount" name="payment_amount" placeholder="Enter amount" required>
+
+            <button type="submit">Proceed to Payment</button>
+        </form>
+    </div>
+
+    <script>
+        document.querySelector('#payment-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const customerId = document.getElementById('customer-id').value;
+            const amount = document.getElementById('payment-amount').value;
+
+            // Store customer ID and amount in localStorage to use later
+            localStorage.setItem('customer_id', customerId);
+            localStorage.setItem('amount', amount);
+
+            const response = await fetch('http://localhost:2000/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ customer_id: customerId, amount })
+            });
+
+            const result = await response.json();
+            alert(result.message);
+
+            // Redirect to OTP page
+            window.location.href = '/otp.html'; // Ensure OTP page exists
+        });
+    </script>
+</body>
+</html>

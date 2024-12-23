@@ -1,0 +1,97 @@
+<!-- public/otp.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .otp-container {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            text-align: center;
+        }
+
+        .otp-container h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .otp-container label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            text-align: left;
+        }
+
+        .otp-container input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .otp-container button {
+            width: 100%;
+            padding: 10px;
+            background-color: #f47c20;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .otp-container button:hover {
+            background-color: #d96c1a;
+        }
+    </style>
+</head>
+<body>
+    <div class="otp-container">
+        <h2>Enter OTP</h2>
+        <form id="otp-form">
+            <label for="otp">OTP:</label>
+            <input type="number" id="otp" name="otp" placeholder="Enter OTP" required>
+            <button type="submit">Verify OTP</button>
+        </form>
+    </div>
+
+    <script>
+        document.querySelector('#otp-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const otp = document.getElementById('otp').value;
+            const customerId = localStorage.getItem('customer_id');
+
+            const response = await fetch('http://localhost:2000/verify-otp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ otp, customer_id: customerId })
+            });
+
+            const result = await response.json();
+            alert(result.message);
+
+            if (result.message.includes('successful')) {
+                window.location.href = '/';  // Redirect to the main page
+            }
+        });
+    </script>
+</body>
+</html>
